@@ -1,0 +1,58 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.NetworkInformation;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.DevTools.V132.CSS;
+using OpenQA.Selenium.Edge;
+using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.Interactions;
+using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;
+
+
+namespace SecondProject
+{
+    internal class FirstClass
+    {
+
+        public static void Main(string[] args)
+        {
+            string expectedDate = "27";
+            string expectedMonth = "March";
+            string expectedYear = "2027";
+
+
+            IWebDriver driver = new ChromeDriver();
+            driver.Manage().Window.Maximize();
+            driver.Url = "http://seleniumpractise.blogspot.com/2016/08/how-to-handle-calendar-in-selenium.html";
+
+            IWebElement dateField = driver.FindElement(By.Id("datepicker"));
+            dateField.Click();
+
+            WebDriverWait wait = new WebDriverWait(driver,TimeSpan.FromSeconds(10));
+            wait.Until(ExpectedConditions.ElementIsVisible(By.Id("ui-datepicker-div")));
+
+            string actualMonth = driver.FindElement(By.ClassName("ui-datepicker-month")).Text;
+            string actualYear = driver.FindElement(By.ClassName("ui-datepicker-year")).Text;
+
+            while (!(expectedMonth.Equals(actualMonth) && expectedYear.Equals(actualYear)))
+            {
+                driver.FindElement(By.XPath("//span[text()='Next']")).Click();
+                actualMonth = driver.FindElement(By.ClassName("ui-datepicker-month")).Text;
+                actualYear = driver.FindElement(By.ClassName("ui-datepicker-year")).Text;
+            }
+
+            string xpathText = "//td[@data-handler='selectDay']/a[text()='"+expectedDate+"']";
+
+            driver.FindElement(By.XPath(xpathText)).Click();    
+
+        }
+
+    }
+
+}

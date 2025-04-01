@@ -1,0 +1,52 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.NetworkInformation;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.DevTools.V132.CSS;
+using OpenQA.Selenium.Edge;
+using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.Interactions;
+using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;
+
+
+namespace SecondProject
+{
+    internal class FirstClass
+    {
+
+        public static void Main(string[] args)
+        {
+            IWebDriver driver = new ChromeDriver();
+            driver.Manage().Window.Maximize();
+            driver.Url = "https://omayo.blogspot.com/";
+
+            string parentWindowId = driver.CurrentWindowHandle;
+
+            driver.FindElement(By.Id("selenium143")).Click();
+
+            IList<string> windowIds = driver.WindowHandles;
+
+            string childWindowId = null;
+
+            foreach (string windowId in windowIds)
+            {
+                if(windowId != parentWindowId)
+                {
+                    childWindowId = windowId;
+                }
+            }
+
+            driver.SwitchTo().Window(childWindowId);
+
+            driver.FindElement(By.LinkText("What is Selenium?")).Click();
+        }
+
+    }
+
+}
